@@ -10,12 +10,14 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
+// 🚀 ESTRATEGIA MS-CANCHAS: Mapeo explícito a nivel de controlador
 @RequestMapping("/api/v1/restricciones")
 @RequiredArgsConstructor
 public class RestriccionController {
 
     private final RestriccionService restriccionService;
 
+    // Tu endpoint queda mapeado de forma nativa y limpia en: /api/v1/restricciones/validar
     @PostMapping("/validar")
     @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public ResponseEntity<DtoValidarRestriccionResponse> validarReglasUsuario(

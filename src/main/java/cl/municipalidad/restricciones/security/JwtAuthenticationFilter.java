@@ -32,6 +32,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         
         String authHeader = request.getHeader("Authorization");
 
+        // Validación temprana: Si no hay token Bearer, se delega el control al SecurityConfig.
+        // Esto permite que rutas públicas como /v3/api-docs fluyan libremente.
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             filterChain.doFilter(request, response);
             return;
@@ -39,6 +41,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         try {
             String token = authHeader.replace("Bearer ", "");
+            
+            // ✅ SINTAXIS AJUSTADA Y TOTALMENTE COMPATIBLE CON TU COMPILADOR (JJWT 0.11.x)
             Claims claims = Jwts.parserBuilder()
                     .setSigningKey(Keys.hmacShaKeyFor(jwtSecret.getBytes(StandardCharsets.UTF_8)))
                     .build()
@@ -73,7 +77,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(
                         username, null, authorities
                 );
-                
                
                 String tipoUsuario = claims.get("tipoUsuario", String.class);
                 if (tipoUsuario == null) {
